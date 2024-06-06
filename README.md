@@ -1,7 +1,7 @@
 # Wallet Service Application
 
 ## Project Description
-Proof of concept of that wallet service:
+Proof of concept of a wallet service:
 - Get a wallet using its identifier.
 - Top-up money in that wallet using a credit card number. It has to charge that amount internally using a third-party platform.
 
@@ -11,7 +11,7 @@ Proof of concept of that wallet service:
 - **URL**: `/v1/wallets/{id}`
 - **Method**: `GET`
 - **Path parameter**:
- - `id` (string): Wallet identifier
+  - `id` (string): Wallet identifier
 - **Response**:
   - `id` (string): Wallet identifier
   - `balance` (big decimal): Wallet balance
