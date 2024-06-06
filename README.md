@@ -1,33 +1,69 @@
-# Wallets Service
-In Playtomic, we have a service to manage our wallets. Our players can top-up their wallets using a credit card and spend that money on our platform (bookings, racket rentals, ...)
+# Wallet Service Application
 
-That service has the following operations:
-- You can query your balance.
-- You can top-up your wallet. In this case, we charge the amount using a third-party payments platform (stripe, paypal, redsys).
-- You can spend your balance on purchases in Playtomic. 
-- You can return these purchases, and your money is refunded.
-- You can check your history of transactions.
+## Project Description
+Proof of concept of that wallet service:
+- Get a wallet using its identifier.
+- Top-up money in that wallet using a credit card number. It has to charge that amount internally using a third-party platform.
 
-This exercise consists of building a proof of concept of that wallet service.
-You have to code endpoints for these operations:
-1. Get a wallet using its identifier.
-1. Top-up money in that wallet using a credit card number. It has to charge that amount internally using a third-party platform.
+## Endpoints
+### Get the wallet:
 
-You don't have to write the following operations, but we will discuss possible solutions during the interview:
-1. How to spend money from the wallet.
-1. How to refund that money.
+- **URL**: `/v1/wallets/{id}`
+- **Method**: `GET`
+- **Path parameter**:
+ - `id` (string): Wallet identifier
+- **Response**:
+  - `id` (string): Wallet identifier
+  - `balance` (big decimal): Wallet balance
+  - `currency` (string): Currency of the balance
 
-The basic structure of a wallet is its identifier and its current balance. If you think you need extra fields, add them. We will discuss it in the interview. 
+#### Request
+```bash
+curl http://localhost:8090/v1/wallets/wallet-id
+```
 
-So you can focus on these problems, you have here a maven project with a Spring Boot application. It already contains
-the basic dependencies and an H2 database. There are development and test profiles.
+#### Response
 
-You can also find an implementation of the service that would call to the real payments platform (StripePaymentService).
-This implementation is calling to a simulator deployed in one of our environments. Take into account
-that this simulator will return 422 http error codes under certain conditions.
+```json
+{
+	"id": "wallet-id",
+	"balance": 50.5,
+	"currency": "EUR"
+}
+```
 
-Consider that this service must work in a microservices environment in high availability. You should care about concurrency too.
+### Top up the wallet:
+- **URL**: `/v1/wallets/{id}/topup`
+- **Method**: `POST`
+- **Path parameter**:
+ - `id` (string): Wallet identifier
+- **Body**:
+ - `creditCard` (string): Credit card number
+ - `amount` (big decimal): Amount to recharge
+- **Response**:
+  - `id` (string): Wallet identifier
+  - `balance` (big decimal): Wallet balance
+  - `currency` (string): Currency of the balance
 
-You can spend as much time as you need but we think that 4 hours is enough to show [the requirements of this job.](OFFER.md)
-You don't have to document your code, but you can write down anything you want to explain or anything you have skipped.
-You don't need to write tests for everything, but we would like to see different types of tests.
+#### Request
+```bash
+curl --location 'http://localhost:8090/v1/wallets/wallet-id/topup' \
+--header 'Content-Type: application/json' \
+--data '{"creditCard": "41111111111111111", "amount": 50}'
+```
+#### Response
+```json
+{
+	"id": "wallet-id",
+	"balance": 100.5,
+	"currency": "EUR"
+}
+```
+
+## Steps to Run the Project
+#### Run spring boot application from console
+To start the aplication you need to run the command:
+```bash
+cd wallet-api
+./mvnw spring-boot:run
+```
