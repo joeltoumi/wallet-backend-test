@@ -1,0 +1,103 @@
+openapi: 3.0.3
+info:
+  title: Wallets API
+  description: API for managing and topping up wallets
+  version: 1.0.0
+paths:
+  /v1/wallets/{id}:
+    get:
+      tags:
+        - wallets
+      summary: Get wallet information
+      description: Returns the wallet details for the given ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Wallet ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved wallet details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletDetails'
+        '404':
+          description: Wallet not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /v1/wallets/{id}/topup:
+    post:
+      tags:
+        - wallets
+      summary: Top up the wallet
+      description: Tops up the wallet with the given amount and credit card details.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Wallet ID
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TopUpRequest'
+      responses:
+        '200':
+          description: Wallet successfully topped up
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletDetails'
+        '404':
+          description: Wallet not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '400':
+          description: Invalid request (e.g., negative amount)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    WalletDetails:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "12345"
+        balance:
+          type: number
+          format: double
+          example: 100.50
+        currency:
+          type: string
+          example: "EUR"
+    TopUpRequest:
+      type: object
+      properties:
+        creditCard:
+          type: string
+          example: "4111111111111111"
+        amount:
+          type: number
+          example: 50.00
+      required:
+        - amount
+        - creditCard
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Error message"
