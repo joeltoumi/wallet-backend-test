@@ -61,6 +61,14 @@ curl --location 'http://localhost:8090/v1/wallets/wallet-id/topup' \
 ```
 
 ## Steps to Run the Project
+
+This POC follows the API first approach, so it is necessary to run a _maven clean install_ command to generate the necessary classes.
+```bash
+git clone https://github.com/joeltoumi/wallet-backend-test.git
+cd wallet-backend-test
+./mvn clean install
+```
+
 #### Run spring boot application from console
 To start the aplication you need to run the command:
 ```bash
